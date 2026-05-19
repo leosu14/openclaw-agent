@@ -1,0 +1,9 @@
+ollama
+streamlit
+pandas
+chromadb
+langchain-ollama
+duckduckgo-search
+#### venv\Scripts\activate
+beautifulsoup4 
+duckduckgo-search

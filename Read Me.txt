@@ -1,0 +1,6 @@
+cd C:\Users\Leo su\openclaw-assistant
+venv\Scripts\activate
+pip install streamlit pandas langchain-ollama requests beautifulsoup4 duckduckgo-search openpyxl
+ollama run llama3
+python -m streamlit run app.py
+http://localhost:8501

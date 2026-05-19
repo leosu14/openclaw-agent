@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+
+memory.json
+reflection.txt
+experience.txt
+daily_report.txt
+task_log.txt
+trace.json
+
+.env
