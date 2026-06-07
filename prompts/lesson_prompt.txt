@@ -7,4 +7,3 @@ duckduckgo-search
 #### venv\Scripts\activate
 beautifulsoup4 
 duckduckgo-search
-python-pptx
