@@ -1,17 +1,58 @@
+import requests
+import os
 from duckduckgo_search import DDGS
 
+IMAGE_DIR = "assets/images"
 
-def search_news(query, max_results=5):
-    results = []
+os.makedirs(
+    IMAGE_DIR,
+    exist_ok=True
+)
 
-    with DDGS() as ddgs:
-        for r in ddgs.text(query, max_results=max_results):
-            results.append({
-                "title": r.get("title", ""),
-                "body": r.get("body", ""),
-                "url": r.get("href", "")
-            })
+def download_image(keyword):
 
-    return results
+    try:
 
+        with DDGS() as ddgs:
 
+            results = list(
+                ddgs.images(
+                    keywords=keyword,
+                    max_results=1
+                )
+            )
+
+        if not results:
+            return None
+
+        image_url = results[0]["image"]
+
+        img = requests.get(
+            image_url,
+            timeout=10
+        ).content
+
+        filename = (
+            keyword
+            .replace(" ", "_")
+            + ".jpg"
+        )
+
+        path = os.path.join(
+            IMAGE_DIR,
+            filename
+        )
+
+        with open(path, "wb") as f:
+
+            f.write(img)
+
+        return path
+
+    except Exception as e:
+
+        print(
+            f"Image error: {e}"
+        )
+
+        return None
