@@ -1,6 +1,6 @@
+from ddgs import DDGS
 import requests
 import os
-from duckduckgo_search import DDGS
 
 IMAGE_DIR = "assets/images"
 
@@ -13,28 +13,20 @@ def download_image(keyword):
 
     try:
 
-        with DDGS() as ddgs:
+        results = DDGS().images(
+            keyword,
+            max_results=1
+        )
 
-            results = list(
-                ddgs.images(
-                    keywords=keyword,
-                    max_results=1
-                )
-            )
+        results = list(results)
 
         if not results:
             return None
 
         image_url = results[0]["image"]
 
-        img = requests.get(
-            image_url,
-            timeout=10
-        ).content
-
         filename = (
-            keyword
-            .replace(" ", "_")
+            keyword.replace(" ", "_")
             + ".jpg"
         )
 
@@ -43,16 +35,18 @@ def download_image(keyword):
             filename
         )
 
-        with open(path, "wb") as f:
+        img = requests.get(
+            image_url,
+            timeout=15
+        ).content
 
+        with open(path, "wb") as f:
             f.write(img)
 
         return path
 
     except Exception as e:
 
-        print(
-            f"Image error: {e}"
-        )
+        print(e)
 
         return None
