@@ -1,37 +1,93 @@
-from openai import OpenAI
-from dotenv import load_dotenv
-
 import os
+
+from dotenv import load_dotenv
+from openai import OpenAI
+
+from llm.providers import (
+    PROVIDER,
+    MODEL
+)
 
 load_dotenv()
 
-API_KEY = os.getenv(
-    "OPENROUTER_API_KEY"
-)
-
-if not API_KEY:
-
-    raise ValueError(
-        "Missing OPENROUTER_API_KEY"
-    )
-
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=API_KEY
-)
 
 def ask_llm(prompt):
 
-    response = client.chat.completions.create(
+    if PROVIDER == "deepseek":
 
-        model="openai/gpt-3.5-turbo",
+        client = OpenAI(
+            api_key=os.getenv(
+                "DEEPSEEK_API_KEY"
+            ),
+            base_url="https://api.deepseek.com"
+        )
 
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
 
-    return response.choices[0].message.content
+        return (
+            response
+            .choices[0]
+            .message.content
+        )
+
+    elif PROVIDER == "openrouter":
+
+        client = OpenAI(
+            api_key=os.getenv(
+                "OPENROUTER_API_KEY"
+            ),
+            base_url="https://openrouter.ai/api/v1"
+        )
+
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        return (
+            response
+            .choices[0]
+            .message.content
+        )
+
+    elif PROVIDER == "ollama":
+
+        client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
+
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        return (
+            response
+            .choices[0]
+            .message.content
+        )
+
+    else:
+
+        raise Exception(
+            f"Unknown provider: {PROVIDER}"
+        )
