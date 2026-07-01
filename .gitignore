@@ -1,7 +1,9 @@
 venv/
 __pycache__/
 *.pyc
+output/
 
+assets/images/
 memory.json
 reflection.txt
 experience.txt
